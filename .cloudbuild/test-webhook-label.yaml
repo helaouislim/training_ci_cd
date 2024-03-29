@@ -5,7 +5,7 @@ steps:
     args:
       - '-c'
       - |-
-        echo "initial test"
+        echo "trigger ci"
 
 availableSecrets:
   secretManager:
