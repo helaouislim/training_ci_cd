@@ -1,0 +1,13 @@
+steps:
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'checkConditions'
+    entrypoint: bash
+    args:
+      - '-c'
+      - |-
+        echo "initial test"
+
+availableSecrets:
+  secretManager:
+    - versionName: projects/$PROJECT_ID/secrets/github-access-token/versions/latest
+      env: 'GITHUB_TOKEN'
