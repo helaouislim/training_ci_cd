@@ -15,8 +15,12 @@ jobs:
           echo "secret $WEBHOOK_SECRET key $WEBHOOK_KEY"
       - run: |
           echo "🔎 The name of the branch is ${{ github.head_ref }}."
-      - run: |
+      - name: Trigger Webhook
+        env:
+          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
+          WEBHOOK_KEY: ${{ secrets.WEBHOOK_KEY }}
+        run: |
           curl -X POST \
             -H "Content-Type: application/json" \
-            "https://cloudbuild.googleapis.com/v1/projects/striped-temple-418614/locations/global/triggers/test-webhook-label:webhook?key=${{WEBHOOK_KEY}}&secret=${{WEBHOOK_SECRET}}&trigger=test-webhook-label&projectId=striped-temple-418614" \
-            -d '{"BRANCH_NAME": "${{ github.head_ref }}", "LAST_LABEL": "${{ github.event.label.name  }}"}'
+            "https://cloudbuild.googleapis.com/v1/projects/striped-temple-418614/locations/global/triggers/test-webhook-label:webhook?key=${WEBHOOK_KEY}&secret=${WEBHOOK_SECRET}&trigger=test-webhook-label&projectId=striped-temple-418614" \
+            -d '{"BRANCH_NAME": "${{ github.head_ref }}", "LAST_LABEL": "${{ github.event.label.name }}"}'
