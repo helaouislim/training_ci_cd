@@ -7,7 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print Event Info
-        run: |
-          echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-          echo "🐧  ref ${{ github.event.pull_request.base.ref }} runner ${{ runner.name }}"
-          echo "🔎 The name of your branch is ${{ github.head_ref }} and your repository is ${{ github.repository }}."
+        env:
+          SUPER_SECRET: ${{ secrets}}
+        run:  example-command "$SUPER_SECRET"
+      - run: |
+          echo "🔎 The name of the branch is ${{ github.head_ref }}.
