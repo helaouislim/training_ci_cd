@@ -8,7 +8,7 @@ steps:
         # Get access token and save it to a file
         accessToken=$(curl -X POST \
           -H 'Content-Type: application/json' \
-          -d '{"clientId": "${_PORT_CLIENT_ID}", "clientSecret": "${_PORT_CLIENT_SECRET}"}' \
+          -d  "clientSecret": "${_PORT_CLIENT_SECRET}"}' \
           -s 'https://api.getport.io/v1/auth/access_token' | grep -o '"accessToken":"[^"]*' | awk -F'"' '{print $4}')
         echo "$accessToken" > /workspace/token.txt
 
