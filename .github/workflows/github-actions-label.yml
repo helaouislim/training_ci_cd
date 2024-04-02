@@ -18,7 +18,5 @@ jobs:
       - run: |
           curl -X POST \
             -H "Content-Type: application/json" \
-            -H "Authorization: Bearer $WEBHOOK_KEY" \
-            -H "X-Secret: $WEBHOOK_SECRET" \
             "https://cloudbuild.googleapis.com/v1/projects/striped-temple-418614/locations/global/triggers/test-webhook-label:webhook?key=${{WEBHOOK_KEY}}&secret=${{WEBHOOK_SECRET}}&trigger=test-webhook-label&projectId=striped-temple-418614" \
             -d '{"BRANCH_NAME": "${{ github.head_ref }}", "LAST_LABEL": "${{ github.event.label.name  }}"}'
