@@ -10,35 +10,4 @@ jobs:
         run: |
           echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
           echo "🐧  ref ${{ github.event.pull_request.base.ref }} runner ${{ runner.name }}"
-          echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Check out repository code
-        uses: actions/checkout@v4
-      - name: List files in the repository
-        run: |
-          ls ${{ github.workspace }}
-      - name: Print Job Status
-        run: echo "🍏 This job's status is ${{ job.status }}."
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: Dump job context
-        env:
-          JOB_CONTEXT: ${{ toJson(job) }}
-        run: echo "$JOB_CONTEXT"
-      - name: Dump steps context
-        env:
-          STEPS_CONTEXT: ${{ toJson(steps) }}
-        run: echo "$STEPS_CONTEXT"
-      - name: Dump runner context
-        env:
-          RUNNER_CONTEXT: ${{ toJson(runner) }}
-        run: echo "$RUNNER_CONTEXT"
-      - name: Dump strategy context
-        env:
-          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
-        run: echo "$STRATEGY_CONTEXT"
-      - name: Dump matrix context
-        env:
-          MATRIX_CONTEXT: ${{ toJson(matrix) }}
-        run: echo "$MATRIX_CONTEXT"
+          echo "🔎 The name of your branch is ${{ github.head_ref }} and your repository is ${{ github.repository }}."
