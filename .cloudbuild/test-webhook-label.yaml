@@ -1,11 +1,22 @@
 steps:
-  - name: 'gcr.io/cloud-builders/gcloud'
-    id: 'checkConditions'
-    entrypoint: bash
+  # Get Port's Access Token
+  - name: "gcr.io/cloud-builders/curl"
+    entrypoint: "bash"
     args:
-      - '-c'
-      - |-
-        echo "trigger ci"
+      - "-c"
+      - |
+        # Get access token and save it to a file
+        accessToken=$(curl -X POST \
+          -H 'Content-Type: application/json' \
+          -d '{"clientId": "${_PORT_CLIENT_ID}", "clientSecret": "${_PORT_CLIENT_SECRET}"}' \
+          -s 'https://api.getport.io/v1/auth/access_token' | grep -o '"accessToken":"[^"]*' | awk -F'"' '{print $4}')
+        echo "$accessToken" > /workspace/token.txt
 
-availableSecrets:
-  secretManager:
+substitutions:
+  _RUN_ID: $(body.context.runId)
+  _PORT_CLIENT_ID: AIzaSyCGfO3h_P4hY063dnwWNZFrl06pkpNv8V8
+  _PORT_CLIENT_SECRET: q6LriF_yeuA-G3w8yF5Bsf01UY_8iBZ4
+
+options:
+  substitution_option: ALLOW_LOOSE
+  logging: CLOUD_LOGGING_ONLY
