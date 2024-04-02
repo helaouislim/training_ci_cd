@@ -8,8 +8,9 @@ jobs:
     steps:
       - name: Print Event Info
         env:
-          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET}}
+          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
           WEBHOOK_KEY: ${{ secrets.WEBHOOK_KEY }}
-        run:  echo "secret ${{ WEBHOOK_SECRET }} key ${{ WEBHOOK_KEY }}"
+        run: |
+          echo "secret $WEBHOOK_SECRET key $WEBHOOK_KEY"
       - run: |
-          echo "🔎 The name of the branch is ${{ github.head_ref }}.
+          echo "🔎 The name of the branch is ${{ github.head_ref }}."
