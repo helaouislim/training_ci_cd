@@ -3,19 +3,4 @@ steps:
     args:
       - '-c'
       - |
-        set -eou pipefail
-        shopt -s inherit_errexit
-
-        if [[ "${COMMIT_SHA}" ]]; then
-          echo "HERE ${COMMIT_SHA}"
-          gcloud alpha builds triggers run ${_TRIGGER_NAME} --sha ${COMMIT_SHA}
-        else
-          echo "MASTER"
-          gcloud alpha builds triggers run ${_TRIGGER_NAME} --branch=master
-        fi
-    id: aggregator-custom-build
-    waitFor:
-      - '-'
-    entrypoint: bash
-tags:
-  - webhook-trigger
+          echo "HERE salut"
