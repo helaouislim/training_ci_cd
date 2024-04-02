@@ -13,7 +13,6 @@ steps:
         echo "$accessToken" > /workspace/token.txt
 
 substitutions:
-  _RUN_ID: $(body.context.runId)
   _PORT_CLIENT_ID: AIzaSyCGfO3h_P4hY063dnwWNZFrl06pkpNv8V8
   _PORT_CLIENT_SECRET: q6LriF_yeuA-G3w8yF5Bsf01UY_8iBZ4
 
