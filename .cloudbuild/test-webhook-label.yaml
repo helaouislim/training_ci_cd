@@ -1,21 +1,21 @@
 steps:
-  # Get Port's Access Token
-  - name: "gcr.io/cloud-builders/curl"
-    entrypoint: "bash"
+  - name: 'google/cloud-sdk'
     args:
-      - "-c"
+      - '-c'
       - |
-        # Get access token and save it to a file
-        accessToken=$(curl -X POST \
-          -H 'Content-Type: application/json' \
-          -d  "clientSecret": "${_PORT_CLIENT_SECRET}"}' \
-          -s 'https://api.getport.io/v1/auth/access_token' | grep -o '"accessToken":"[^"]*' | awk -F'"' '{print $4}')
-        echo "$accessToken" > /workspace/token.txt
+        set -eou pipefail
+        shopt -s inherit_errexit
 
-substitutions:
-  _PORT_CLIENT_ID: AIzaSyCGfO3h_P4hY063dnwWNZFrl06pkpNv8V8
-  _PORT_CLIENT_SECRET: q6LriF_yeuA-G3w8yF5Bsf01UY_8iBZ4
-
-options:
-  substitution_option: ALLOW_LOOSE
-  logging: CLOUD_LOGGING_ONLY
+        if [[ "${COMMIT_SHA}" ]]; then
+          echo "HERE ${COMMIT_SHA}"
+          gcloud alpha builds triggers run ${_TRIGGER_NAME} --sha ${COMMIT_SHA}
+        else
+          echo "MASTER"
+          gcloud alpha builds triggers run ${_TRIGGER_NAME} --branch=master
+        fi
+    id: aggregator-custom-build
+    waitFor:
+      - '-'
+    entrypoint: bash
+tags:
+  - webhook-trigger
