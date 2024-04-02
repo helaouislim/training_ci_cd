@@ -3,7 +3,8 @@ on:
   pull_request:
     types: [labeled]
 jobs:
-  Explore-GitHub-Actions:
+  build:
+    if: ${{ github.event.label.name == 'bug' }}
     runs-on: ubuntu-latest
     steps:
       - name: Print Event Info
@@ -14,3 +15,10 @@ jobs:
           echo "secret $WEBHOOK_SECRET key $WEBHOOK_KEY"
       - run: |
           echo "🔎 The name of the branch is ${{ github.head_ref }}."
+      - run: |
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $WEBHOOK_KEY" \
+            -H "X-Secret: $WEBHOOK_SECRET" \
+            "https://cloudbuild.googleapis.com/v1/projects/striped-temple-418614/locations/global/triggers/test-webhook-label:webhook?trigger=test-webhook-label&projectId=striped-temple-418614" \
+            -d '{"BRANCH_NAME": "${{ github.head_ref }}", "LAST_LABEL": "${{ github.event.label.name  }}"}'
