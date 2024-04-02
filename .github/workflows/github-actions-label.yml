@@ -1,0 +1,17 @@
+name: CI
+
+on:
+  pull_request:
+    types: [ labeled ]
+
+jobs:
+  build:
+    if: ${{ github.event.label.name == 'bug' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - name: REST API with curl
+        run: |
+          curl -X POST -H "Content-type: application/json" "https://cloudbuild.googleapis.com/v1/projects/striped-temple-418614/locations/global/triggers/test-webhook-label:webhook?key=AIzaSyCGfO3h_P4hY063dnwWNZFrl06pkpNv8V8&secret=q6LriF_yeuA-G3w8yF5Bsf01UY_8iBZ4&trigger=test-webhook-label&projectId=striped-temple-418614" -d '{"COMMIT_SHA": "test"}'
