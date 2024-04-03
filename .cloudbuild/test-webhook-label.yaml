@@ -1,7 +1,8 @@
 steps:
-  - name: 'google/cloud-sdk'
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: bash
     args:
-      - '-c'
+      - -c
       - |
         echo "HERE _BODY ${_BODY} and _BRANCH_NAME ${_BRANCH_NAME} and BRANCH_NAME ${BRANCH_NAME}"
 substitutions:
