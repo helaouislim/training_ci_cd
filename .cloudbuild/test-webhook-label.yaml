@@ -5,7 +5,7 @@ steps:
       - -c
       - |
         if()
-        echo "HERE _BODY ${_BODY} and _BRANCH_NAME ${_BRANCH_NAME} and BRANCH_NAME ${BRANCH_NAME}"
+        echo "HERE _BODY ${_BODY} and _BRANCH_NAME ${_BRANCH_NAME} and LABEL_NAME ${LABEL_NAME}"
 
   - name: 'maniator/gh'
     id: 'checkBuildLabel'
@@ -27,3 +27,4 @@ steps:
 substitutions:
   _BODY: $(body)
   BRANCH_NAME: $(body.BRANCH_NAME)
+  LABEL_NAME: $(body.LABEL_NAME)
