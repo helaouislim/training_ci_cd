@@ -5,7 +5,7 @@ steps:
       - -c
       - |
         if()
-        echo "HERE _BODY ${_BODY} and _BRANCH_NAME ${_BRANCH_NAME} and _LABEL_NAME ${LABEL_NAME}"
+        echo "HERE _BODY ${_BODY} and _BRANCH_NAME ${_BRANCH_NAME} and _LABEL_NAME ${_LABEL_NAME}"
 
   - name: 'maniator/gh'
     id: 'checkBuildLabel'
@@ -13,7 +13,7 @@ steps:
     args:
       - -c
       - |
-        if [[ "$LABEL_NAME" == "build_apk" ]]; then
+        if [[ "$_LABEL_NAME" == "build_apk" ]]; then
           echo "try checkout"
           git config --global credential.helper gcloud.sh
           git fetch --all
