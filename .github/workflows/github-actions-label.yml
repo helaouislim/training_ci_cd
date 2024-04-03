@@ -4,22 +4,16 @@ on:
     types: [labeled]
 jobs:
   build:
-    if: ${{ github.event.label.name == 'bug' }}
+    if: ${{ github.event.label.name == 'build_apk' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Print Event Info
-        env:
-          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
-          WEBHOOK_KEY: ${{ secrets.WEBHOOK_KEY }}
-        run: |
-          echo "secret $WEBHOOK_SECRET key $WEBHOOK_KEY"
-      - run: |
-          echo "🔎 The name of the branch is ${{ github.head_ref }}."
       - name: Trigger Webhook
         env:
           WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
           WEBHOOK_KEY: ${{ secrets.WEBHOOK_KEY }}
+          PROJECT_NAME: "striped-temple-418614"
+          TRIGGER_NAME: "test-webhook-label"
         run: |
           curl -X POST \
             -H "Content-Type: application/json" \
-            "https://cloudbuild.googleapis.com/v1/projects/striped-temple-418614/locations/global/triggers/test-webhook-label:webhook?key=${WEBHOOK_KEY}&secret=${WEBHOOK_SECRET}&trigger=test-webhook-label&projectId=striped-temple-418614" -d '{"BRANCH_NAME": "${{ github.head_ref }}", "TAG_NAME": "${{ github.event.label.name }}"}'
+            "https://cloudbuild.googleapis.com/v1/projects/${PROJECT_NAME}/locations/global/triggers/${TRIGGER_NAME}:webhook?key=${WEBHOOK_KEY}&secret=${WEBHOOK_SECRET}&trigger=${TRIGGER_NAME}l&projectId=${PROJECT_NAME}" -d '{"BRANCH_NAME": "${{ github.head_ref }}", "TAG_NAME": "${{ github.event.label.name }}"}'
