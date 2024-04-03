@@ -4,7 +4,6 @@ steps:
     args:
       - -c
       - |
-        if()
         echo "HERE _BODY ${_BODY} and _BRANCH_NAME ${_BRANCH_NAME} and _LABEL_NAME ${_LABEL_NAME}"
 
   - name: 'maniator/gh'
@@ -17,7 +16,7 @@ steps:
           echo "try checkout"
           git config --global credential.helper gcloud.sh
           git fetch --all
-          git checkout ${_BRANCH_NAME}
+          git checkout "${_BRANCH_NAME}"
           echo "checkout finished"
         else
           echo "Skipping checkout as label is not 'build_apk'"
@@ -25,6 +24,6 @@ steps:
         fi
 
 substitutions:
-  _BODY: $(body)
-  BRANCH_NAME: $(body.BRANCH_NAME)
-  _LABEL_NAME: $(body.LABEL_NAME)
+  _BODY: '$(body)'
+  _BRANCH_NAME: '$(body.BRANCH_NAME)'
+  _LABEL_NAME: '$(body.LABEL_NAME)'
