@@ -1,0 +1,10 @@
+steps:
+  - name: 'google/cloud-sdk'
+    args:
+      - '-c'
+      - |
+        echo "HERE _BODY ${_BODY} and _BRANCH_NAME ${_BRANCH_NAME} and BRANCH_NAME ${BRANCH_NAME}"
+substitutions:
+  _BODY: $(body)
+  _BRANCH_NAME: $(body._BRANCH_NAME)
+  BRANCH_NAME: $(body.BRANCH_NAME)
