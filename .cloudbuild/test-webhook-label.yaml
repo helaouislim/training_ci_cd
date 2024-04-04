@@ -6,23 +6,6 @@ steps:
       - |
         echo "HERE _BODY ${_BODY} and _BRANCH_NAME ${_BRANCH_NAME} and _LABEL_NAME ${_LABEL_NAME}"
 
-  - name: 'maniator/gh'
-    id: 'checkBuildLabel'
-    entrypoint: bash
-    args:
-      - -c
-      - |
-        if [[ "$_LABEL_NAME" == "build_apk" ]]; then
-          echo "try checkout"
-          git config --global credential.helper gcloud.sh
-          git fetch --all
-          git checkout "${_BRANCH_NAME}"
-          echo "checkout finished"
-        else
-          echo "Skipping checkout as label is not 'build_apk'"
-          exit 0
-        fi
-
 substitutions:
   _BODY: '$(body)'
   _BRANCH_NAME: '$(body.BRANCH_NAME)'
