@@ -16,4 +16,4 @@ jobs:
         run: |
           curl -X POST \
             -H "Content-Type: application/json" \
-            "https://cloudbuild.googleapis.com/v1/projects/${PROJECT_NAME}/locations/global/triggers/${TRIGGER_NAME}:webhook?key=${WEBHOOK_KEY}&secret=${WEBHOOK_SECRET}&trigger=${TRIGGER_NAME}&projectId=${PROJECT_NAME}" -d '{"BRANCH_NAME": "${{ github.head_ref }}", "TAG_NAME": "${{ github.event.label.name }}"}'
+            "https://cloudbuild.googleapis.com/v1/projects/${PROJECT_NAME}/locations/global/triggers/${TRIGGER_NAME}:webhook?key=${WEBHOOK_KEY}&secret=${WEBHOOK_SECRET}&trigger=${TRIGGER_NAME}&projectId=${PROJECT_NAME}" -d '{"BRANCH_NAME": "${{ github.head_ref }}", "LABEL_NAME": "${{ github.event.label.name }}"}'
