@@ -1,0 +1,20 @@
+name: 'PR Title Check'
+on:
+  pull_request:
+    types:
+      # Check title when opened.
+      - opened
+      # Check title when new commits are pushed.
+      # Required to use as a status check.
+      - synchronize
+      - edited
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Slashgear/action-check-pr-title@v4.3.0
+        with:
+          # Match pull request titles in the form "[JIRA-TICKET] TYPE : Details".
+          regexp: "(^\\[[a-zA-Z]+-\\d+\\]\\s[a-zA-Z]+\\s?:\\s?.+|^release.*)"
+          helpMessage: "Example: '[CORE-1234] FEAT : example of title'"
