@@ -1,0 +1,18 @@
+name: 'PR Title Check'
+on:
+  pull_request:
+    types:
+      # Check title when opened.
+      - opened
+      # Check title when new commits are pushed.
+      # Required to use as a status check.
+      - synchronize
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dylanvann/check-pull-request-title@v1
+        with:
+          # Match pull request titles in the form "[JIRA-TICKET] TYPE : Details".
+          pattern: '(^\[[a-zA-Z]+-\d+\]\s[a-zA-Z]+\s?:\s?.+|^release.*)'
