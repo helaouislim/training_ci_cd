@@ -59,6 +59,7 @@ jobs:
       
           UPDATE_ID=$(echo "$RESPONSE" | grep -oP '"id":\s*\K\d+')
           
+          echo "RESPONSE: RESPONSE"
           echo "UPDATE ID: $UPDATE_ID"
           echo "UPDATE_ID=UPDATE_ID" >> $GITHUB_ENV
 
