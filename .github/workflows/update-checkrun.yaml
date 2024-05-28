@@ -37,7 +37,7 @@ jobs:
             | jq -r '.token')
           
           echo "Access Token: $ACCESS_TOKEN"
-
+          echo "github ${{ github }} ssa ${{ github.sha }}"
           echo "INSTALLATION_ID=$INSTALLATION_ID" >> $GITHUB_ENV
           echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
 
