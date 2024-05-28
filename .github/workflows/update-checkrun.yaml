@@ -58,8 +58,8 @@ jobs:
             -d '{"name":"label-tests","head_sha": "${{ github.event.pull_request.head.sha }}","status":"in_progress","external_id":"42","started_at":"2024-04-29T09:00:00Z","output":{"title":"label run","summary":"summary","text":"blablabla"}}')
           
           echo "RESPONSE: $RESPONSE"
-      
-          UPDATE_ID=$(echo "$RESPONSE" | grep -oP '"id":\s*\K\d+')
+          
+          UPDATE_ID=$(echo "$RESPONSE" | jq -r '.id')
           
           echo "UPDATE ID: $UPDATE_ID"
           echo "UPDATE_ID=$UPDATE_ID" >> $GITHUB_ENV
