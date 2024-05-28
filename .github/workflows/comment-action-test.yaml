@@ -8,7 +8,7 @@ jobs:
     steps:
       - name: comment
         run: |
-          echo "event ${{ github.event}}"
+          echo "event ${{ github.event}} head_ref ${{ github.head_ref }} githubObejct ${{ github }}"
       - name: Trigger Webhook
         env:
           WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
