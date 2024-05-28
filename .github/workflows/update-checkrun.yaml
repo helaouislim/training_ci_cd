@@ -41,7 +41,7 @@ jobs:
           echo "INSTALLATION_ID=$INSTALLATION_ID" >> $GITHUB_ENV
           echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
 
-      - name: Debug: Print environment variables
+      - name: Print environment variables
         run: |
           echo "INSTALLATION_ID=$INSTALLATION_ID"
           echo "ACCESS_TOKEN=$ACCESS_TOKEN"
