@@ -44,7 +44,7 @@ jobs:
         run: |
           echo "INSTALLATION_ID=$INSTALLATION_ID"
           echo "ACCESS_TOKEN=$ACCESS_TOKEN"
-          echo "github sha${{ github.event.pull_request.sha }}  ref ${{ github.head_ref }}"
+          echo "github  base.sha ${{github.event.pull_request.base.sha}} head.Sha ${{ github.event.pull_request.head.sha }}  ref ${{ github.head_ref }}"
           
 
       - name: Update Check Run
