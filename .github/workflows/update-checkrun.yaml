@@ -1,9 +1,15 @@
 name: Update Check Run
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    types:
+      # Check title when opened.
+      - opened
+      # Check title when new commits are pushed.
+      # Required to use as a status check.
+      - synchronize
+      - edited
+
 
 jobs:
   update_check_run:
