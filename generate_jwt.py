@@ -37,7 +37,7 @@ i4M3BTwuCF5lGm6GimdKwNAKH3z+HJ7jwIPpFjTBeqA/Glmlizc85w==
         'iss': app_id
     }
     jwt_token = jwt.encode(payload, private_key, algorithm='RS256')
-    return jwt_token.decode('utf-8')
+    return jwt_token
 
 if __name__ == "__main__":
     print(generate_jwt())
