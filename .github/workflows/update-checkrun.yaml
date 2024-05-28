@@ -37,14 +37,15 @@ jobs:
             | jq -r '.token')
           
           echo "Access Token: $ACCESS_TOKEN"
-          echo "github ${{ github }} ssa ${{ github.head_ref }}.${{ github.sha }}"
           echo "INSTALLATION_ID=$INSTALLATION_ID" >> $GITHUB_ENV
           echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
 
-      - name: Print environment variables
+      - name: Print variables
         run: |
           echo "INSTALLATION_ID=$INSTALLATION_ID"
           echo "ACCESS_TOKEN=$ACCESS_TOKEN"
+          echo "github ${{ github }} workflow_sha ${{ workflow_sha }} sha${{ github.sha }}  ref ${{ github.head_ref }}"
+          
 
       - name: Update Check Run
         run: |
