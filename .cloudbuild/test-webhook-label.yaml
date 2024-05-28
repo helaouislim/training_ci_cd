@@ -4,9 +4,10 @@ steps:
     args:
       - -c
       - |
-        echo "HERE _BODY ${_BODY} and _BRANCH_NAME ${_BRANCH_NAME} and _LABEL_NAME ${_LABEL_NAME}"
+        echo "HERE _BODY ${_BODY} and _BRANCH_NAME ${_BRANCH_NAME} and _LABEL_NAME ${_LABEL_NAME} and _CHECK_RUN_ID ${_CHECK_RUN_ID} "
 
 substitutions:
   _BODY: '$(body)'
   _BRANCH_NAME: '$(body.BRANCH_NAME)'
   _LABEL_NAME: '$(body.LABEL_NAME)'
+  _CHECK_RUN_ID: '$(body.CHECK_RUN_ID)'
