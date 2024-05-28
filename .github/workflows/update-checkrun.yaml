@@ -61,7 +61,7 @@ jobs:
           
           CHECK_RUN_ID=$(echo "$RESPONSE" | jq -r '.id')
           
-          echo "$CHECK_RUN_ID: $CHECK_RUN_ID"
+          echo "CHECK_RUN_ID: $CHECK_RUN_ID"
           echo "CHECK_RUN_ID=$CHECK_RUN_ID" >> $GITHUB_ENV
 
       - name: Update Check Run
