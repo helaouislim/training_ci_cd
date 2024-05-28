@@ -3,13 +3,9 @@ name: Update Check Run
 on:
   pull_request:
     types:
-      # Check title when opened.
       - opened
-      # Check title when new commits are pushed.
-      # Required to use as a status check.
       - synchronize
       - edited
-
 
 jobs:
   update_check_run:
@@ -21,89 +17,68 @@ jobs:
 
       - name: Generate JWT and get Installation ID and Token
         run: |
-          # Fetch GitHub App ID and private key from secrets
-          GITHUB_APP_ID=$GITHUB_APP_ID_SECRET
-          GITHUB_APP_PRIVATE_KEY=$GITHUB_APP_PRIVATE_KEY_SECRET
-
-          # Generate JWT using Python
-          JWT=$(python3 -c "
-  import jwt
-  import time
-  
-  payload = {
-'iat': int(time.time()),
-'exp': int(time.time()) + 600,
-'iss': '${GITHUB_APP_ID}'
-}
-  private_key = '''${GITHUB_APP_PRIVATE_KEY}'''
-  jwt_token = jwt.encode(payload, private_key, algorithm='RS256')
-  print(jwt_token.decode('utf-8'))
-  ")
-
-          # Get Installation ID
+          JWT=$(python3 generate_jwt.py ${{ secrets.GITHUB_APP_ID }} ${{ secrets.GITHUB_APP_PRIVATE_KEY }})
           INSTALLATION_ID=$(curl -s -X GET \
             -H "Authorization: Bearer $JWT" \
-                    -H "Accept: application/vnd.github+json" \
-                    https://api.github.com/app/installations \
-                    | jq -r '.[0].id')
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/app/installations \
+            | jq -r '.[0].id')
 
-                    # Get Installation Access Token
-                    ACCESS_TOKEN=$(curl -s -X POST \
-                    -H "Authorization: Bearer $JWT" \
-                    -H "Accept: application/vnd.github+json" \
-                    https://api.github.com/app/installations/$INSTALLATION_ID/access_tokens \
-                    | jq -r '.token')
+          ACCESS_TOKEN=$(curl -s -X POST \
+            -H "Authorization: Bearer $JWT" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/app/installations/$INSTALLATION_ID/access_tokens \
+            | jq -r '.token')
 
-                    echo "INSTALLATION_ID=$INSTALLATION_ID" >> $GITHUB_ENV
-                    echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
+          echo "INSTALLATION_ID=$INSTALLATION_ID" >> $GITHUB_ENV
+          echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
 
-                    - name: Update Check Run
-                      run: |
-                        # Use the ACCESS_TOKEN environment variable to update the check run
-                        curl -L \
-                          -X PATCH \
-                          -H "Accept: application/vnd.github+json" \
-                          -H "Authorization: Bearer $ACCESS_TOKEN" \
-                          -H "X-GitHub-Api-Version: 2022-11-28" \
-                          https://api.github.com/repos/helaouislim/training_ci_cd/check-runs/25466798712 \
-                          -d '{
-                            "name": "mighty_readme",
-                            "started_at": "2018-05-04T01:14:52Z",
-                            "status": "completed",
-                            "conclusion": "success",
-                            "completed_at": "2018-05-04T01:14:52Z",
-                            "output": {
-                              "title": "Mighty Readme report",
-                              "summary": "There are 0 failures, 2 warnings, and 1 notices.",
-                              "text": "You may have some misspelled words on lines 2 and 4. You also may want to add a section in your README about how to install your app.",
-                              "annotations": [
-                                {
-                                  "path": "README.md",
-                                  "annotation_level": "warning",
-                                  "title": "Spell Checker",
-                                  "message": "Check your spelling for 'banaas'.",
-                                  "raw_details": "Do you mean 'bananas' or 'banana'?",
-                                  "start_line": 2,
-                                  "end_line": 2
-                                },
-                                {
-                                  "path": "README.md",
-                                  "annotation_level": "warning",
-                                  "title": "Spell Checker",
-                                  "message": "Check your spelling for 'aples'",
-                                  "raw_details": "Do you mean 'apples' or 'Naples'?",
-                                  "start_line": 4,
-                                  "end_line": 4
-                                }
-                              ],
-                              "images": [
-                                {
-                                  "alt": "Super bananas",
-                                  "image_url": "http://example.com/images/42"
-                                }
-                              ]
-                            }
-                          }'
-                      env:
-                        GITHUB_APP_ID_SECRET: ${{ secrets.GITHUB_APP_ID }}
-                        GITHUB_APP_PRIVATE_KEY_SECRET: ${{ secrets.GITHUB_APP_PRIVATE_KEY }}
+      - name: Update Check Run
+        run: |
+          curl -L \
+            -X PATCH \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $ACCESS_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/helaouislim/training_ci_cd/check-runs/25466798712 \
+            -d '{
+              "name": "mighty_readme",
+              "started_at": "2018-05-04T01:14:52Z",
+              "status": "completed",
+              "conclusion": "success",
+              "completed_at": "2018-05-04T01:14:52Z",
+              "output": {
+                "title": "Mighty Readme report",
+                "summary": "There are 0 failures, 2 warnings, and 1 notices.",
+                "text": "You may have some misspelled words on lines 2 and 4. You also may want to add a section in your README about how to install your app.",
+                "annotations": [
+                  {
+                    "path": "README.md",
+                    "annotation_level": "warning",
+                    "title": "Spell Checker",
+                    "message": "Check your spelling for 'banaas'.",
+                    "raw_details": "Do you mean 'bananas' or 'banana'?",
+                    "start_line": 2,
+                    "end_line": 2
+                  },
+                  {
+                    "path": "README.md",
+                    "annotation_level": "warning",
+                    "title": "Spell Checker",
+                    "message": "Check your spelling for 'aples'",
+                    "raw_details": "Do you mean 'apples' or 'Naples'?",
+                    "start_line": 4,
+                    "end_line": 4
+                  }
+                ],
+                "images": [
+                  {
+                    "alt": "Super bananas",
+                    "image_url": "http://example.com/images/42"
+                  }
+                ]
+              }
+            }'
+        env:
+          GITHUB_APP_ID_SECRET: ${{ secrets.GITHUB_APP_ID }}
+          GITHUB_APP_PRIVATE_KEY_SECRET: ${{ secrets.GITHUB_APP_PRIVATE_KEY }}
