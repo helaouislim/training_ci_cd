@@ -64,18 +64,18 @@ jobs:
           echo "CHECK_RUN_ID: $CHECK_RUN_ID"
           echo "CHECK_RUN_ID=$CHECK_RUN_ID" >> $GITHUB_ENV
 
-      - name: Update Check Run
-        run: |
-          curl -L \
-            -X PATCH \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer $ACCESS_TOKEN" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            https://api.github.com/repos/helaouislim/training_ci_cd/check-runs/$CHECK_RUN_ID \
-            -d '{"name": "mighty_readme","started_at": "2018-05-04T01:14:52Z","status": "completed","conclusion": "success","completed_at": "2018-05-04T01:14:52Z","output": {"title": "Mighty Readme report","summary": "There are 0 failures, 2 warnings, and 1 notices.","text": "You may have some misspelled words on lines 2 and 4. You also may want to add a section in your README about how to install your app."}}'
-        env:
-          GITHUB_APP_ID_SECRET: ${{ secrets.APP_ID }}
-          GITHUB_APP_PRIVATE_KEY_SECRET: ${{ secrets.APP_PRIVATE_KEY }}
+#      - name: Update Check Run
+#        run: |
+#          curl -L \
+#            -X PATCH \
+#            -H "Accept: application/vnd.github+json" \
+#            -H "Authorization: Bearer $ACCESS_TOKEN" \
+#            -H "X-GitHub-Api-Version: 2022-11-28" \
+#            https://api.github.com/repos/helaouislim/training_ci_cd/check-runs/$CHECK_RUN_ID \
+#            -d '{"name": "mighty_readme","started_at": "2018-05-04T01:14:52Z","status": "completed","conclusion": "success","completed_at": "2018-05-04T01:14:52Z","output": {"title": "Mighty Readme report","summary": "There are 0 failures, 2 warnings, and 1 notices.","text": "You may have some misspelled words on lines 2 and 4. You also may want to add a section in your README about how to install your app."}}'
+#        env:
+#          GITHUB_APP_ID_SECRET: ${{ secrets.APP_ID }}
+#          GITHUB_APP_PRIVATE_KEY_SECRET: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: Trigger Webhook
         env:
@@ -87,5 +87,5 @@ jobs:
           curl -X POST \
             -H "Content-Type: application/json" \
             -e "github.com" \
-            "https://cloudbuild.googleapis.com/v1/projects/${PROJECT_NAME}/locations/global/triggers/${TRIGGER_NAME}:webhook?key=${WEBHOOK_KEY}&secret=${WEBHOOK_SECRET}&trigger=${TRIGGER_NAME}&projectId=${PROJECT_NAME}" -d '{"BRANCH_NAME": "${{ github.head_ref }}", "LABEL_NAME": "${{ github.event.label.name }}","CHECK_RUN_ID": "$CHECK_RUN_ID"}'
+            "https://cloudbuild.googleapis.com/v1/projects/${PROJECT_NAME}/locations/global/triggers/${TRIGGER_NAME}:webhook?key=${WEBHOOK_KEY}&secret=${WEBHOOK_SECRET}&trigger=${TRIGGER_NAME}&projectId=${PROJECT_NAME}" -d '{"BRANCH_NAME": "${{ github.head_ref }}", "LABEL_NAME": "${{ github.event.label.name }}","CHECK_RUN_ID": "'"$CHECK_RUN_ID"'"}'
 
