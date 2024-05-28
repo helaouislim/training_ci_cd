@@ -17,7 +17,7 @@ jobs:
 
       - name: Generate JWT and get Installation ID and Token
         run: |
-          JWT=$(python3 generate_jwt.py ${{ secrets.GITHUB_APP_ID }} ${{ secrets.GITHUB_APP_PRIVATE_KEY }})
+          JWT=$(python3 generate_jwt.py)
           INSTALLATION_ID=$(curl -s -X GET \
             -H "Authorization: Bearer $JWT" \
             -H "Accept: application/vnd.github+json" \
