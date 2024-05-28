@@ -60,9 +60,6 @@ jobs:
           
             echo "UPDATE ID: $UPDATE_ID"
             echo "UPDATE_ID=UPDATE_ID" >> $GITHUB_ENV
-        env:
-          GITHUB_APP_ID_SECRET: ${{ secrets.APP_ID }}
-          GITHUB_APP_PRIVATE_KEY_SECRET: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: Update Check Run
         run: |
