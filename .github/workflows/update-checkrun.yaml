@@ -44,7 +44,7 @@ jobs:
         run: |
           echo "INSTALLATION_ID=$INSTALLATION_ID"
           echo "ACCESS_TOKEN=$ACCESS_TOKEN"
-          echo "github ${{ github }} workflow_sha ${{ workflow_sha }} sha${{ github.sha }}  ref ${{ github.head_ref }}"
+          echo "github ${{ github }} workflow_sha ${{ github.workflow_sha }} sha${{ github.sha }}  ref ${{ github.head_ref }}"
           
 
       - name: Update Check Run
