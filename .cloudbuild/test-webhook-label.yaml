@@ -23,6 +23,14 @@ steps:
       - |
         exit 1
 
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: bash
+    id: testOtherSuccess
+    args:
+      - -c
+      - |
+        exit 0
+
   - name: 'gcr.io/cloud-builders/curl'
     entrypoint: bash
     id: update_check_run
