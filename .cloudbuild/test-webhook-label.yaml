@@ -23,10 +23,9 @@ steps:
       - |
         exit 1
 
-
-
   - name: 'gcr.io/cloud-builders/curl'
     entrypoint: bash
+    id: update_check_run
     args:
       - -c
       - |
@@ -37,7 +36,8 @@ steps:
           -H "X-GitHub-Api-Version: 2022-11-28" \
           https://api.github.com/repos/helaouislim/training_ci_cd/check-runs/$_CHECK_RUN_ID \
           -d '{"name": "mighty_readme","started_at": "2018-05-04T01:14:52Z","status": "completed","conclusion": "success","completed_at": "2018-05-04T01:14:52Z","output": {"title": "Mighty Readme report","summary": "There are 0 failures, 2 warnings, and 1 notices.","text": "You may have some misspelled words on lines 2 and 4. You also may want to add a section in your README about how to install your app."}}'
-
+    waitFor: ['-']
+    alwaysRun: true
 
 substitutions:
   _BODY: '$(body)'
