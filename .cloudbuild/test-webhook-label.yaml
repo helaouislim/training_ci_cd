@@ -18,6 +18,7 @@ steps:
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: bash
     id: testFailure
+    allowFailure: true
     args:
       - -c
       - |
@@ -26,6 +27,7 @@ steps:
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: bash
     id: testOtherSuccess
+    allowFailure: true
     args:
       - -c
       - |
