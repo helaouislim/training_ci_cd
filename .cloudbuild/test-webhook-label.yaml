@@ -23,27 +23,7 @@ steps:
       - |
         exit 1
 
-  - name: 'gcr.io/cloud-builders/gcloud'
-    entrypoint: bash
-    id: setStatus
-    waitFor: [ 'test', 'testSuccess', 'testFailure' ]
-    args:
-      - -c
-      - |
-        if [[ "${_BUILD_STATUS[test]}" == "SUCCESS" && "${_BUILD_STATUS[testSuccess]}" == "SUCCESS" && "${_BUILD_STATUS[testFailure]}" == "SUCCESS" ]]; then
-          STATUS="success"
-         else 
-         STATUS="failure" 
-         fi        
-         echo "STATUS=$STATUS" > /workspace/status.txt
 
-  - name: 'gcr.io/cloud-builders/gcloud'
-    entrypoint: bash
-    args:
-      - -c
-      - |
-        STATUS=$(cat /workspace/status.txt)
-        echo "Final status: $STATUS"
 
   - name: 'gcr.io/cloud-builders/curl'
     entrypoint: bash
