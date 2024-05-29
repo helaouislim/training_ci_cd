@@ -1,13 +1,53 @@
 steps:
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: bash
+    id: test
     args:
       - -c
       - |
         echo "HERE _BODY ${_BODY} and _BRANCH_NAME ${_BRANCH_NAME} and _LABEL_NAME ${_LABEL_NAME} and _CHECK_RUN_ID ${_CHECK_RUN_ID} and _ACCESS_TOKEN ${_ACCESS_TOKEN} build_id=$BUILD_ID"
 
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: bash
+    id: testSuccess
+    args:
+      - -c
+      - |
+        exit 0
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: bash
+    id: testFailure
+    args:
+      - -c
+      - |
+        exit 1
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: bash
+    id: setStatus
+    waitFor: [ 'test', 'testSuccess', 'testFailure' ]
+    args:
+      - -c
+      - |
+        if [[ "${_BUILD_STATUS[test]}" == "SUCCESS" && "${_BUILD_STATUS[testSuccess]}" == "SUCCESS" && "${_BUILD_STATUS[testFailure]}" == "SUCCESS" ]]; then
+          STATUS="success"
+         else 
+         STATUS="failure" 
+         fi        
+         echo "STATUS=$STATUS" > /workspace/status.txt
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        STATUS=$(cat /workspace/status.txt)
+        echo "Final status: $STATUS"
+
   - name: 'gcr.io/cloud-builders/curl'
     entrypoint: bash
+    if: always()
     args:
       - -c
       - |
