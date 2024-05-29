@@ -11,3 +11,4 @@ substitutions:
   _BRANCH_NAME: '$(body.BRANCH_NAME)'
   _LABEL_NAME: '$(body.LABEL_NAME)'
   _CHECK_RUN_ID: '$(body.CHECK_RUN_ID)'
+  _ACCESS_TOKEN: '$(body.ACCESS_TOKEN)'
