@@ -1,0 +1,91 @@
+name: Update Check Run
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - edited
+
+jobs:
+  update_check_run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Generate JWT and get Installation ID and Token
+        run: |
+          JWT=$(python3 generate_jwt.py)
+          
+          echo "Generated JWT: $JWT"
+          
+          
+          INSTALLATION_ID=$(curl -s -X GET \
+            -H "Authorization: Bearer $JWT" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/app/installations \
+            | jq -r '.[0].id')
+
+          echo "Installation ID: $INSTALLATION_ID"
+
+          ACCESS_TOKEN=$(curl -s -X POST \
+            -H "Authorization: Bearer $JWT" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/app/installations/$INSTALLATION_ID/access_tokens \
+            | jq -r '.token')
+          
+          echo "Access Token: $ACCESS_TOKEN"
+          echo "INSTALLATION_ID=$INSTALLATION_ID" >> $GITHUB_ENV
+          echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
+
+      - name: Print variables
+        run: |
+          echo "INSTALLATION_ID=$INSTALLATION_ID"
+          echo "ACCESS_TOKEN=$ACCESS_TOKEN"
+          echo "github  base.sha ${{github.event.pull_request.base.sha}} head.Sha ${{ github.event.pull_request.head.sha }}  ref ${{ github.head_ref }}"
+
+
+      - name: Create Check Run
+        run: |
+          RESPONSE=$(curl -L \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $ACCESS_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/helaouislim/training_ci_cd/check-runs \
+            -d '{"name":"label-tests","head_sha": "${{ github.event.pull_request.head.sha }}","status":"in_progress","external_id":"42","started_at":"2024-04-29T09:00:00Z","output":{"title":"label run","summary":"summary","text":"blablabla"}}')
+          
+          echo "RESPONSE: $RESPONSE"
+          
+          CHECK_RUN_ID=$(echo "$RESPONSE" | jq -r '.id')
+          
+          echo "CHECK_RUN_ID: $CHECK_RUN_ID"
+          echo "CHECK_RUN_ID=$CHECK_RUN_ID" >> $GITHUB_ENV
+
+      #      - name: Update Check Run
+      #        run: |
+      #          curl -L \
+      #            -X PATCH \
+      #            -H "Accept: application/vnd.github+json" \
+      #            -H "Authorization: Bearer $ACCESS_TOKEN" \
+      #            -H "X-GitHub-Api-Version: 2022-11-28" \
+      #            https://api.github.com/repos/helaouislim/training_ci_cd/check-runs/$CHECK_RUN_ID \
+      #            -d '{"name": "mighty_readme","started_at": "2018-05-04T01:14:52Z","status": "completed","conclusion": "success","completed_at": "2018-05-04T01:14:52Z","output": {"title": "Mighty Readme report","summary": "There are 0 failures, 2 warnings, and 1 notices.","text": "You may have some misspelled words on lines 2 and 4. You also may want to add a section in your README about how to install your app."}}'
+      #        env:
+      #          GITHUB_APP_ID_SECRET: ${{ secrets.APP_ID }}
+      #          GITHUB_APP_PRIVATE_KEY_SECRET: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Trigger Webhook
+        env:
+          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
+          WEBHOOK_KEY: ${{ secrets.WEBHOOK_KEY }}
+          PROJECT_NAME: "striped-temple-418614"
+          TRIGGER_NAME: "test-webhook-label"
+        run: |
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -e "github.com" \
+            "https://cloudbuild.googleapis.com/v1/projects/${PROJECT_NAME}/locations/global/triggers/${TRIGGER_NAME}:webhook?key=${WEBHOOK_KEY}&secret=${WEBHOOK_SECRET}&trigger=${TRIGGER_NAME}&projectId=${PROJECT_NAME}" -d '{"BRANCH_NAME": "${{ github.head_ref }}", "LABEL_NAME": "${{ github.event.label.name }}","CHECK_RUN_ID": "'"$CHECK_RUN_ID"'" ,"ACCESS_TOKEN": "'"$ACCESS_TOKEN"'"}'
+

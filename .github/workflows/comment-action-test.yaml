@@ -13,8 +13,6 @@ jobs:
         env:
           WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
           WEBHOOK_KEY: ${{ secrets.WEBHOOK_KEY }}
-          PROJECT_NAME: "striped-temple-418614"
-          TRIGGER_NAME: "test-webhook-label"
         run: |
           curl -X POST \
             -H "Content-Type: application/json" \
